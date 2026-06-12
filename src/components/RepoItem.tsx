@@ -10,30 +10,19 @@ import {
   IonThumbnail,
 } from "@ionic/react";
 import { pencil, trash } from "ionicons/icons";
+import { Repository } from "../interfaces/Repository";
 
-interface RepoProps {
-  name: string;
-  description: string;
-  language: string;
-  avatarUrl: string;
-}
-
-const RepoItem: React.FC<RepoProps> = ({
-  name,
-  description,
-  language,
-  avatarUrl,
-}) => {
+const RepoItem: React.FC<Repository> = (repository) => {
   return (
     <IonItemSliding>
       <IonItem>
         <IonThumbnail slot="start">
-          <img src={avatarUrl} alt={`${name} avatar`} />
+          <img src={repository.owner.avatar_url} alt={repository.name} />
         </IonThumbnail>
         <IonLabel>
-          <h2>{name}</h2>
-          <p>{description}</p>
-          <p>Lenguaje: {language}</p>
+          <h2>{repository.name}</h2>
+          <p>{repository.description}</p>
+          <p>Lenguaje: {repository.language}</p>
         </IonLabel>
         <IonItemOptions>
           <IonItemOption>
