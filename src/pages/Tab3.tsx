@@ -9,10 +9,29 @@ import {
   IonPage,
   IonTitle,
   IonToolbar,
+  useIonViewWillEnter,
 } from "@ionic/react";
 import "./Tab3.css";
+import { useState } from "react";
+import { getUserInfo } from "../services/GithubService";
+import { GithubUser } from "../interfaces/GithubUser";
+import LoadingSpinner from "../components/LoadingSpinner";
 
 const Tab3: React.FC = () => {
+  const [userInfo, setUserInfo] = useState<GithubUser | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  const loadUserInfo = async () => {
+    setIsLoading(true);
+    const userData = await getUserInfo();
+    setUserInfo(userData);
+    setIsLoading(false);
+  };
+
+  useIonViewWillEnter(() => {
+    loadUserInfo();
+  });
+
   return (
     <IonPage>
       <IonHeader>
@@ -29,19 +48,20 @@ const Tab3: React.FC = () => {
         <div className="card-container">
           <IonCard className="profile-card">
             <img
-              src="https://avatars.githubusercontent.com/u/1?v=4"
+              src={userInfo?.avatar_url}
               alt="Avatar"
               className="profile-avatar"
             />
             <IonCardHeader className="profile-card-header">
-              <IonCardTitle>Katerine Zambrano</IonCardTitle>
-              <IonCardSubtitle>katerinezambrano02</IonCardSubtitle>
+              <IonCardTitle>{userInfo?.name}</IonCardTitle>
+              <IonCardSubtitle>{userInfo?.login}</IonCardSubtitle>
             </IonCardHeader>
             <IonCardContent>
-              <p>Desarrolladora de Aplicaciones Móviles</p>
+              <p>{userInfo?.bio}</p>{" "}
             </IonCardContent>
           </IonCard>
         </div>
+        <LoadingSpinner isOpen={isLoading} />
       </IonContent>
     </IonPage>
   );
